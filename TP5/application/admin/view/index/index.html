@@ -1,0 +1,109 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的文章</title>
+</head>
+<body>
+<table border="1px" width="1000px" align="center">
+    <th>ID</th>
+    <th>文章标题</th>
+    <th>添加时间</th>
+    <th>作者</th>
+    <th>关键词</th>
+    <th>摘要</th>
+    <th>分类ID</th>
+    <th>是否顶置</th>
+    <th>是否展示</th>
+    <th>阅读次数</th>
+    {foreach $data as $v}
+        <tr>
+            <td>{$v['aid']}</td>
+            <td><a href="#">{$v['title']}</a></td>
+            <td><?php echo date("Y-m-d ",$v['addtime']) ?></td>
+            <td>{$v['author']}</td>
+            <td>{$v['keywords']}</td>
+            <td>{$v['news_desc']}</td>
+            <td>{$v['cid']}</td>
+            <td>{$v['is_top']}</td>
+            <td>{$v['is_show']}</td>
+            <td>{$v['show_num']}</td>
+        </tr>
+    {/foreach}
+</table>
+{$list->render()}
+</body>
+</html>
+<script>
+
+    function MyAjax(type,url,data){
+        $.ajax({
+            type:type,
+            url:url,
+            data:data,
+            success:function(msg)
+            {
+                console.log(msg);
+
+                if(msg['data'].length>0)
+                {
+                    var str = '';
+                    var attr_id =null;
+
+                    var pageinfo ='';
+                    for(var i=0;i<msg['data'].length;i++)
+                    {
+                        attr_id = msg['data'][i]['aid'];
+                        str +='<tr>';
+                        str +='<td>'+msg['data'][i]['aid']+'</td>';
+                        str +='<td>';
+                        str +='<a>'+msg['data'][i]['title']+'</a>';
+                        str +='</td>';
+
+                        str +='<td>'+msg['data'][i]['author']+'</td>';
+                        str +='<td>'+msg['data'][i]['keywords']+'</td>';
+                        str +='<td>'+msg['data'][i]['news_desc']+'</td>';
+                        str +='<td>'+msg['data'][i]['cid']+'</td>';
+                        str +='<td>'+msg['data'][i]['is_top']+'</td>';
+                        str +='<td>'+msg['data'][i]['is_show']+'</td>';
+                        str +='<td>'+msg['data'][i]['show_num']+'</td>';
+                        str +='</tr>';
+                    }
+                    $('.table-class > tbody').html(str);
+
+                    pageinfo +='<div style="margin-top:20px;margin-left:450px;width:900px;height:200px" class="pagination">';
+                    pageinfo +='<span style="margin-left:10px">';
+                    pageinfo +=' 每页显示<input type="text" id="num" size="1"  onchange="jumpNum(this)" value="'+msg['per_page']+'">条';
+                    pageinfo +='</span>';
+                    pageinfo +='<span style="margin-left:10px">';
+                    pageinfo +='<button style="margin-left:5px" onclick="LoadingInfo(1)">首页</button>';
+                    // 上一页
+                    var up =   ( msg['current_page']-1<1 ) ? 1: msg['current_page']-1;
+                    // 下一页
+                    var down = ( msg['current_page']+1>msg['last_page'] ) ? msg['last_page'] : msg['current_page']+1;
+
+                    pageinfo +='<button style="margin-left:5px" onclick="LoadingInfo('+up+')">上一页</button>';
+                    pageinfo +='<button style="margin-left:5px" onclick="LoadingInfo('+down+')">下一页</button>';
+                    pageinfo +='<button style="margin-left:5px" onclick="LoadingInfo('+msg['last_page']+')">末页</button>';
+                    pageinfo +='</span>';
+                    pageinfo +='<span style="margin-left:10px">';
+                    pageinfo +='第'+msg['current_page']+'页共'+msg['last_page']+'页';
+                    pageinfo +='</span>';
+                    pageinfo +='<span style="margin-left:10px">跳<input type="text" id="pagenum" size="1"  onchange="jump(this,'+msg['last_page']+')" value="'+msg['current_page']+'">页</span>';
+                    pageinfo +='</div>';
+                    pageinfo +='<input type="hidden" id="current_page" value="'+msg['current_page']+'">';
+                    pageinfo +='<input type="hidden" id="last_page" value="'+msg['last_page']+'">';
+
+                    // 替换元素标签，同时元素上的事件还可以保留！！！
+                    $(pageinfo).replaceAll('.pagination');
+
+                } else {
+                    var str = '<tr align="center"><td colspan="7">暂无符合条件的数据记录</td></tr>';
+                    $('.table-class > tbody').html(str);
+                    $('.pagination').remove();
+                }
+
+                }
+        })
+    }
+</script>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章详情</title>
+</head>
+<style>
+    .table1
+      {
+          float:left;
+      }
+    .table2
+    {
+        float:right;
+    }
+    .div1{
+        float:right;
+    }
+</style>
+<body>
+<table width="800px" float="left" class="table1">
+        {foreach $data as $k}
+        <tr>
+            <td>标题:<font size="3">{$k['title']}</font></td><br />
+        </tr>
+        <tr >
+            <td>时间：<?php echo date("Y-m-d ",$k['addtime']) ?></td>
+        </tr>
+        <tr>
+            <td>作者：{$k['author']}</td>
+        </tr>
+        <tr>
+            <td>阅读次数：{$k['show_num']}</td>
+        </tr>
+        <tr>
+            <td>内容：{$k['content']}</td>
+        </tr>
+        {/foreach}
+</table>
+<table border="1" width="300px" class="table2">
+    <h1 align="center" style="margin-top:40px;">推荐</h1>
+
+    {foreach $data as $k }
+    {for start="1" end="11"}
+    <p><a onclick="article({$k.aid},{$k.show_num})">{$k.title|substr=0,24}...... </a><span style="color:red;margin-left:40px;">阅读次数：{$k.show_num}次</span></p>
+    {/for}
+    {/foreach}
+
+</table>
+<div class="div1">
+    <a href="{:url('index/index')}">点击退出</a>
+</div>
+</body>
+</html>

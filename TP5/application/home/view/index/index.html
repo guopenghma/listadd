@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的文章</title>
+</head>
+<style>
+    /*分页*/
+    .pagination {text-align: center;}
+    .pagination li {display: inline-block;margin-right: -1px;padding: 5px;border: 1px solid #e2e2e2;min-width: 20px;text-align: center;}
+    .pagination li.active {background: #009688;color: #fff;border: 1px solid #009688;}
+    .pagination li a {display: block;text-align: center;}
+
+    a{Cursor:pointer;}
+
+</style>
+<body>
+<table border="1" width="1000px" align="center">
+    <th>ID</th>
+    <th>文章标题</th>
+    <th>添加时间</th>
+    {foreach $list as $v}
+        <tr>
+            <td>{$v['aid']}</td>
+            <td><a href="http://guopenghang.local.com/index.php/home/Detalis/detalis?id={$v['aid']}">{$v['title']}</a>
+                {if condition="$v['show_num'] eq 0"}
+                <font color="red"> 新</font>
+                {else /}
+                已阅读<font color="red">{$v['show_num']}</font>次
+                {/if}
+            </td>
+            <td><?php echo date("Y-m-d ",$v['addtime']) ?></td>
+        </tr>
+    {/foreach}
+</table>
+{$list->render()}
+</body>
+</html>
+<script>
+    function LoadingInfo()
+    {
+        var title = $('search_text').val();
+        $.ajax({
+            type:'post',
+            url:"{:url('Index/search')}",
+            data:{
+                'title':title,
+            },
+            success:function(data)
+            {
+                console.log(data);
+            }
+        })
+    }
+
+</script>
